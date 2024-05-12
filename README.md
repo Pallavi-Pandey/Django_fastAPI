@@ -1,1 +1,1 @@
-# Django_fooddelivery
+# Django_fastdelivery
