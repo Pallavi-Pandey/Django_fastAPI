@@ -10,6 +10,7 @@ def home(request):
 @login_required(login_url='/sign-in/?next=/customer/')
 def profile_page(request):
     user_form = forms.BasicUserForm(instance=request.user)
+    customer_form = forms.BasicCustomerForm(instance=request.user.customer)
 
     if request.method == 'POST':
         user_form = forms.BasicUserForm(request.POST, instance=request.user)
@@ -19,6 +20,7 @@ def profile_page(request):
 
     return render(request, 'customer/profile.html', {
         'user_form': user_form,
+        'customer_form': customer_form,
     })  
     
 
