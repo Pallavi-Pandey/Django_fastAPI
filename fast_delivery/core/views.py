@@ -1,6 +1,5 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
 
 from . import forms
 
@@ -8,13 +7,6 @@ from . import forms
 def home(request):
     return render(request, 'home.html')
 
-@login_required()
-def customer_page(request):
-    return render(request, 'home.html')
-
-@login_required()
-def couriew_page(request):
-    return render(request, 'home.html')
 
 def signup(request):
     form = forms.SignUpForm()
@@ -23,7 +15,7 @@ def signup(request):
         form = forms.SignUpForm(request.POST)
 
         if form.is_valid():
-            email = form.cleaned_data['email'].lower()
+            email = form.cleaned_data.get('email').lower()
 
             user = form.save(commit=False)
             user.username = email
