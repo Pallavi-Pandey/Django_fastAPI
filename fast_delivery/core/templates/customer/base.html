@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-lg-4">
             <div class="text-center">
-            <img src="{% static 'img/profile.png' %}" class="rounded-circle mb-2" width="200" height="120" alt="User">
+            <img src="{% if request.user.customer.avatar %}{{ request.user.customer.avatar.url }} {% else %} {% static 'img/profile.png' %} {% endif %}" class="rounded-circle mb-2" width="120" height="120" alt="User">
             <h4>{{ request.user.get_full_name }}</h4>
             <p class="text-secondary">{{ request.user.email }}</p>
         </div>

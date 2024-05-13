@@ -14,8 +14,10 @@ def profile_page(request):
 
     if request.method == 'POST':
         user_form = forms.BasicUserForm(request.POST, instance=request.user)
-        if user_form.is_valid():
+        customer_form = forms.BasicCustomerForm(request.POST, request.FILES, instance=request.user.customer)
+        if user_form.is_valid() and customer_form.is_valid():
             user_form.save()
+            customer_form.save()
             return redirect(reverse('customer:profile')) 
 
     return render(request, 'customer/profile.html', {
