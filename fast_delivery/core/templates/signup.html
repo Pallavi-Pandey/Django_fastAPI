@@ -19,13 +19,10 @@
                     </h4>
                     <form method="POST">
                         {% csrf_token %}
-                        {% bootstrap_form_errors form %}
-                        {% bootstrap_label "Email" %}
-                        {% bootstrap_field form.username show_label=False placeholder="Email" %}
-                        {% bootstrap_field form.password %}
-                        <button class="btn btn-warning btn-block">Sign In</button>
+                        {% bootstrap_form form %}
+                        <button type="submit" class="btn btn-warning btn-block">Sign Up</button>
                         <p class="text-center mt-3">
-                            Don't have a Account? <a href="/sign-up/?next={{ request.GET.next }}"><b>Sign In</b></a>  
+                            Already have an account? <a href="/sign-in/?next={{ request.GET.next }}"><b>Sign In</b></a>  
                         </p>
                     </form>
                 </div>
