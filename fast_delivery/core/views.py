@@ -23,7 +23,7 @@ def signup(request):
         form = forms.SignUpForm(request.POST)
 
         if form.is_valid():
-            email = form.cleaned_data('email').lower()
+            email = form.cleaned_data['email'].lower()
 
             user = form.save(commit=False)
             user.username = email
