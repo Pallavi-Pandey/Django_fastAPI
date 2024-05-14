@@ -5,7 +5,7 @@
 <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -14,14 +14,18 @@
         apiKey: "AIzaSyDBYbMrnvrRZiV1McbHZM5MSkGlrYZfc-0",
         authDomain: "fast-delivery-ae47f.firebaseapp.com",
         projectId: "fast-delivery-ae47f",
-        storageBucket: "fast-delivery-ae47f.appspot.com",
+        storageBucket: "fast-delivery-ae47f",
         messagingSenderId: "57531189647",
         appId: "1:57531189647:web:4b2c775d0f29e0796b63fa"
     };
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
+
+    // Initialize Firebase Authentication
+    const auth = getAuth(app);
 </script>
+
 
 {% endblock %}
 
@@ -65,7 +69,7 @@
             </div>
         </div>
 
-        <div id="verify" class="input-group mb-3 d-none">
+        <div id="verify-code" class="input-group mb-3 d-none">
             <input type="text" class="form-control" placeholder="Verification Code">
             <div class="input-group-append">
                 <button class="btn btn-warning" type="button">Verify Code</button>
@@ -74,7 +78,22 @@
     </div>
 </div>
 
+<script>
 
+$("#get-code button").on('click', function(){
+    const phoneNumber = $("#get-code input").val();
+    console.log(phoneNumber);
+
+    $("#get-code").addClass("d-none")
+    $("#verify-code").removeClass("d-none")
+});
+
+$("#verify-code button").on('click', function(){
+    const code = $("#verify-code input").val();
+    console.log(code);
+});
+
+</script>
 
 {% endblock %}
 
