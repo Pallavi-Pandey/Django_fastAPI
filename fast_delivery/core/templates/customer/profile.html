@@ -62,6 +62,8 @@
 <div class="card bg-white mt-2 mb-5">
     <div class="card-body">
 
+        <div class="recaptcha-container"></div>
+
         <div id="get-code" class="input-group mb-3">
             <input type="text" class="form-control" placeholder="Your Phone Number">
             <div class="input-group-append">
@@ -78,22 +80,48 @@
     </div>
 </div>
 
-<script>
+<script >
 
-$("#get-code button").on('click', function(){
-    const phoneNumber = $("#get-code input").val();
-    console.log(phoneNumber);
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
 
-    $("#get-code").addClass("d-none")
-    $("#verify-code").removeClass("d-none")
-});
+    $("#get-code button").on('click', function () {
+        const phoneNumber = $("#get-code input").val();
+        console.log(phoneNumber);
 
-$("#verify-code button").on('click', function(){
-    const code = $("#verify-code input").val();
-    console.log(code);
-});
+        firebase.auth().signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
+            .then((confirmationResult) => {
+                // SMS sent. Prompt user to type the code from the message, then sign the
+                // user in with confirmationResult.confirm(code).
+                console.log(confirmationResult)
+                window.confirmationResult = confirmationResult;
+
+
+                $("#get-code").addClass("d-none")
+                $("#verify-code").removeClass("d-none")
+            }).catch((error) => {
+                // Error; SMS not sent
+                toast(error.message, 'error')
+            });
+
+    });
+
+    $("#verify-code button").on('click', function () {
+        const code = $("#verify-code input").val();
+
+        confirmationResult.confirm(code).then((result) => {
+            // User signed in successfully.
+            const user = result.user;
+            console.log(user.phoneNumber);
+            
+            user.getIdToken().then(function (idToken) {
+                console.log(idToken);
+            });
+        }).catch((error) => {
+            // User couldn't sign in (bad verification code?)
+            toast(error.message, 'error');
+        });
+    });
 
 </script>
 
 {% endblock %}
-
