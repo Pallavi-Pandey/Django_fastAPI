@@ -156,3 +156,6 @@ EMAIL_HOST_PASSWORD = 'fd2cprw7'
 DEFAULT_FROM_EMAIL = 'Fast Delivery <no-reply@fast_delivery.localhost>'
 
 FIREBASE_ADMIN_CREDETIALS = os.path.join(BASE_DIR,"fast-delivery-ae47f-firebase-adminsdk-cw4cc-8ccbbb77f1.json" )
+
+STRIPE_API_PUBLIC_KEY = "pk_test_51PGRhxSDpQz4Qfa6IB51KI4hiXxFh12BwPNiIKk19PiKjGw921JZLs3GekpXB2nJKFQBeZAZDyl5JqoP13QUSLp100ajv8GzNR"
+STRIPE_API_SECRET_KEY = "sk_test_51PGRhxSDpQz4Qfa6jpwpv2FUfBVIvKVw32x4d0smJ8lwKIiVqWsiuNHMwwTitd9gCMwASjQkDraL6fuYBFxsPjLK00VSEHccx3"

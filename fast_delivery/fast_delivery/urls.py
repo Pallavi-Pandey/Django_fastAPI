@@ -11,6 +11,7 @@ from core.courier import views as courier_views
 customer_urlpatterns = [
     path('', customer_views.home, name="home"),
     path('profile/', customer_views.profile_page, name="profile"),
+    path('payment_method/', customer_views.payment_method_page, name="payment_method"),
 ]
 
 courier_urlpatterns = [
