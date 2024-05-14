@@ -154,3 +154,5 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'pallavipandey181@gmail.com'
 EMAIL_HOST_PASSWORD = 'fd2cprw7'
 DEFAULT_FROM_EMAIL = 'Fast Delivery <no-reply@fast_delivery.localhost>'
+
+FIREBASE_ADMIN_CREDETIALS = os.path.join(BASE_DIR,"fast-delivery-ae47f-firebase-adminsdk-cw4cc-8ccbbb77f1.json" )

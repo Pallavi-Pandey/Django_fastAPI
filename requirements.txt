@@ -3,4 +3,5 @@ django-bootstrap-v5
 django-bootstrap4
 pillow
 social-auth-app-django
+firebase-admin
 
