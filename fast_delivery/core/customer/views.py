@@ -4,6 +4,8 @@ from django.urls import reverse
 from core.customer import forms
 
 from django.contrib import messages
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 @login_required()
 def home(request):
@@ -13,6 +15,7 @@ def home(request):
 def profile_page(request):
     user_form = forms.BasicUserForm(instance=request.user)
     customer_form = forms.BasicCustomerForm(instance=request.user.customer)
+    password_form = PasswordChangeForm(request.user)
 
     if request.method == 'POST':
         user_form = forms.BasicUserForm(request.POST, instance=request.user)
@@ -27,6 +30,7 @@ def profile_page(request):
     return render(request, 'customer/profile.html', {
         'user_form': user_form,
         'customer_form': customer_form,
+        'password_form': password_form
     })  
     
 
