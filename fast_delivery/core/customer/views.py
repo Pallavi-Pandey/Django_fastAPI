@@ -72,6 +72,25 @@ def payment_method_page(request):
         current_customer.stripe_customer_id = customer['id']
         current_customer.save()
 
+    # Get Stripe payment method
+    stripe_payment_methods = stripe.PaymentMethod.list(
+        customer=current_customer.stripe_customer_id,
+        type='card',
+    )
+
+    print(stripe_payment_methods)
+
+    if stripe_payment_methods and len(stripe_payment_methods.data) > 0:
+        payment_method = stripe_payment_methods.data[0]
+        current_customer.stripe_payment_method_id = payment_method.id
+        current_customer.stripe_card_last4 = payment_method.card.last4
+        current_customer.save()
+    else:
+        current_customer.stripe_payment_method_id = ""
+        current_customer.stripe_card_last4 = ""
+        current_customer.save()
+
+
     intent = stripe.SetupIntent.create(
         customer=current_customer.stripe_customer_id
     )
