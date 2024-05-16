@@ -152,10 +152,12 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'pallavipandey181@gmail.com'
-from .passwords import stripe_private_key,app_password
+from .passwords import stripe_private_key,app_password,google_api_key
 EMAIL_HOST_PASSWORD = app_password
 DEFAULT_FROM_EMAIL = 'Fast Delivery <no-reply@fast_delivery.localhost>'
 FIREBASE_ADMIN_CREDETIALS = os.path.join(BASE_DIR,"secretss","fast-delivery-ae47f-firebase-adminsdk-cw4cc-8ccbbb77f1.json" )
 
 STRIPE_API_PUBLIC_KEY = "pk_test_51PGRhxSDpQz4Qfa6IB51KI4hiXxFh12BwPNiIKk19PiKjGw921JZLs3GekpXB2nJKFQBeZAZDyl5JqoP13QUSLp100ajv8GzNR"
 STRIPE_API_SECRET_KEY = stripe_private_key
+
+GOOGLE_API_KEY = google_api_key
