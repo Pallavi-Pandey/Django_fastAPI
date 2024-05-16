@@ -88,6 +88,14 @@
 <div class="media mb-4">
     <img src="{{ job.photo.url}}" class="rounded-lg mr-3" width="150" height="150" alt="">
     <div class="media-body">
+
+        {% if job.status == 'processing' %}
+        <form method="POST" class="float-right">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Cancel Job</button>
+        </form>
+        {% endif %}
+
         <h4 class="mb-1">{{job.name}}</h4>
         <p class="text-secondary">{{job.description}}</p>
         <div class="row">
