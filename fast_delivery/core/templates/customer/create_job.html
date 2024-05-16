@@ -34,7 +34,13 @@
                 <div class="card-body">
                     {% if not job %}
                     <p>A summary of your job information will appear here</p>
-                    
+                    {% else %}
+                    <b>
+                        <h2>{{job.name}}</h2>
+                    </b>
+                    <p>{{job.quantity}} item</p>
+                    <p>{{job.size}} Job</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -47,25 +53,29 @@
 
                     <ul class="nav nav-pills nav-justified align-items-center mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="active" id="pills-info-tab" data-toggle="pill" href="#pills-info" role="tab"
-                                aria-controls="pills-info" aria-selected="true">Item Info</a>
+                            <a class="{% if step == 1 %} active {% endif %}" id="pills-info-tab" data-toggle="pill"
+                                href="#pills-info" role="tab" aria-controls="pills-info" aria-selected="true">Item
+                                Info</a>
                         </li>
                         <i class="fas fa-chevron-right"></i>
                         <li class="nav-item" role="presentation">
-                            <a id="pills-pickup-tab" data-toggle="pill" href="#pills-pickup" role="tab"
-                                aria-controls="pills-pickup" aria-selected="false">Pickup</a>
-                        </li>
-                        <i class="fas fa-chevron-right"></i>
-
-                        <li class="nav-item" role="presentation">
-                            <a id="pills-delivery-tab" data-toggle="pill" href="#pills-delivery" role="tab"
-                                aria-controls="pills-delivery" aria-selected="false">Delivery</a>
+                            <a class="{% if step == 2 %} active {% endif %}" id="pills-pickup-tab" data-toggle="pill"
+                                href="#pills-pickup" role="tab" aria-controls="pills-pickup"
+                                aria-selected="false">Pickup</a>
                         </li>
                         <i class="fas fa-chevron-right"></i>
 
                         <li class="nav-item" role="presentation">
-                            <a id="pills-payment-tab" data-toggle="pill" href="#pills-payment" role="tab"
-                                aria-controls="pills-payment" aria-selected="false">Payment</a>
+                            <a class="{% if step == 3 %} active {% endif %}" id="pills-delivery-tab" data-toggle="pill"
+                                href="#pills-delivery" role="tab" aria-controls="pills-delivery"
+                                aria-selected="false">Delivery</a>
+                        </li>
+                        <i class="fas fa-chevron-right"></i>
+
+                        <li class="nav-item" role="presentation">
+                            <a class="{% if step == 4 %} active {% endif %}" id="pills-payment-tab" data-toggle="pill"
+                                href="#pills-payment" role="tab" aria-controls="pills-payment"
+                                aria-selected="false">Payment</a>
                         </li>
                     </ul>
 
@@ -75,12 +85,13 @@
             <!-- STEPS FORMS -->
             <b>Create a job</b>
             <div class="tab-content" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="pills-info" role="tabpanel" aria-labelledby="pills-info-tab">
+                <div class="tab-pane fade {% if step == 1 %} show active {% endif %}" id="pills-info" role="tabpanel"
+                    aria-labelledby="pills-info-tab">
                     <h1>Item Info</h1>
                     <form method="POSt" enctype="multipart/form-data">
                         <b class="text-secondary">
                             Item Information
-                        </b><br/>
+                        </b><br />
                         <div class="card bg-white mt-2 mb-5">
                             <div class="card-body">
                                 {% csrf_token %}
@@ -89,21 +100,24 @@
                         </div>
                         <input type="hidden" name="step" value="1">
                         <button type="submit" class="btn btn-warning ">Save & Continue</button>
-
                     </form>
 
                 </div>
-                <div class="tab-pane fade" id="pills-pickup" role="tabpanel" aria-labelledby="pills-pickup-tab">
+                <div class="tab-pane fade  {% if step == 2 %}show active {% endif %}" id="pills-pickup" role="tabpanel"
+                    aria-labelledby="pills-pickup-tab">
                     <h1>Pickup</h1>
                 </div>
-                <div class="tab-pane fade" id="pills-delivery" role="tabpanel" aria-labelledby="pills-delivery-tab">
+                <div class="tab-pane fade  {% if step == 3 %}show active {% endif %}" id="pills-delivery"
+                    role="tabpanel" aria-labelledby="pills-delivery-tab">
                     <h1>Delivery</h1>
                 </div>
-                <div class="tab-pane fade" id="pills-payment" role="tabpanel" aria-labelledby="pills-payment-tab">
+                <div class="tab-pane fade  {% if step == 4 %}show active {% endif %}" id="pills-payment" role="tabpanel"
+                    aria-labelledby="pills-payment-tab">
                     <h1>Payment</h1>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}
