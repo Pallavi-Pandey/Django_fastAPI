@@ -19,7 +19,8 @@
         color: orange;
     }
 
-    #pickup-map, #delivery-map{
+    #pickup-map,
+    #delivery-map {
         height: 100%;
     }
 </style>
@@ -41,7 +42,7 @@
                 <div class="card-body">
                     {% if not job %}
                     <p>A summary of your job information will appear here</p>
-                    {% else %}      
+                    {% else %}
 
                     {% if step > 1 %}
                     <h4>{{job.name}}</h4>
@@ -67,7 +68,7 @@
                 </div>
             </div>
         </div>
- 
+
         <!-- RIGHT SIDE -->
         <div class="col-lg-8">
             <!-- STEPS TABS -->
@@ -170,26 +171,24 @@
                     <form method="POST" enctype="multipart/form-data">
                         <b class="text-secondary">
                             Delivery Information
-                        </b><br/>
+                        </b><br />
                         <div class="card bg-white mt-2 mb-5">
                             <div class="card-body">
                                 <div class="row">
-    
+
                                     <div class="col-lg-8">
                                         {% csrf_token %}
-                                        {% bootstrap_form step3_form  exclude="delivery_lat,delivery_lng" %}
+                                        {% bootstrap_form step3_form exclude="delivery_lat,delivery_lng" %}
                                         <input hidden name="delivery_lat" id="delivery_lat"
-                                        value="{{job.delivery_lat}}"
-                                        >
+                                            value="{{job.delivery_lat}}">
                                         <input hidden name="delivery_lng" id="delivery_lng"
-                                        value="{{job.delivery_lng}}"
-                                        >
+                                            value="{{job.delivery_lng}}">
                                     </div>
                                     <div class="col-lg-4">
                                         <div id="delivery-map"></div>
                                         <div id="delivery-infowindow-content">
                                             <img src="" width="16" height="16" id="delivery-place-icon">
-                                            <span id="delivery-place-name"  class="title"></span><br>
+                                            <span id="delivery-place-name" class="title"></span><br>
                                             <span id="delivery-place-address"></span>
                                         </div>
                                     </div>
@@ -197,15 +196,39 @@
                             </div>
                         </div>
                         <input type="hidden" name="step" value="3">
-                        <button type="button" class="btn btn-warning" onclick="$('#pills-info-tab').tab('show');">Back</button> 
+                        <button type="button" class="btn btn-warning"
+                            onclick="$('#pills-info-tab').tab('show');">Back</button>
                         <button type="submit" class="btn btn-warning ">Save & Continue</button>
-    
+
                     </form>
                 </div>
                 <!-- STEP 4 -->
                 <div class="tab-pane fade  {% if step == 4 %}show active {% endif %}" id="pills-payment" role="tabpanel"
                     aria-labelledby="pills-payment-tab">
                     <h1>Payment</h1>
+
+                    <form method="POST">
+                        <b class="text-secondary">Payment Method</b>
+                        <div class="card bg-white mt-2 mb-5">
+                            <div class="card-body">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label>Your Credit/Debit Card</label>
+                                    <input class="form-control" value="*** *** *** {{request.user.customer.stripe_card_last4}}"
+                                        disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label>Price</label>
+                                    <input class="form-control" value="{{job.price}}" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="step" value="4">
+                            <button type="button" class="btn btn-warning"
+                            onclick="$('#pills-delivery-tab').tab('show');">Back</button>
+                        <button type="submit" class="btn btn-warning ">Create Job</button>
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -213,77 +236,77 @@
 </div>
 
 <script>
-    var pickupLat=parseFloat('{{job.pickup_lat}}');
-    var pickupLng=parseFloat('{{job.pickup_lng}}');
+    var pickupLat = parseFloat('{{job.pickup_lat}}');
+    var pickupLng = parseFloat('{{job.pickup_lng}}');
 
-    var deliveryLat=parseFloat('{{job.delivery_lat}}');
-    var deliveryLng=parseFloat('{{job.delivery_lng}}');
+    var deliveryLat = parseFloat('{{job.delivery_lat}}');
+    var deliveryLng = parseFloat('{{job.delivery_lng}}');
 
-    function initMapByType(type, initLat, initLng){
-        const map=new google.maps.Map(document.getElementById(type+"-map"),{
-            center:{ lat : initLat || -33.8688, lng : initLng || 151.2195 },zoom:13,
+    function initMapByType(type, initLat, initLng) {
+        const map = new google.maps.Map(document.getElementById(type + "-map"), {
+            center: { lat: initLat || -33.8688, lng: initLng || 151.2195 }, zoom: 13,
         });
-        if (initLat && initLng){
+        if (initLat && initLng) {
             new google.maps.Marker({
-                position:new google.maps.LatLng(initLat,initLng),
-                map:map,
+                position: new google.maps.LatLng(initLat, initLng),
+                map: map,
             })
         }
-        const input=document.getElementById("id_"+ type +"_address");
-        const autocomplete=new google.maps.places.Autocomplete(input);
+        const input = document.getElementById("id_" + type + "_address");
+        const autocomplete = new google.maps.places.Autocomplete(input);
 
-        autocomplete.bindTo("bounds",map);
-        autocomplete.setFields(["address_components","geometry","icon","name"]);
-        const infowindow=new google.maps.InfoWindow();
-        const infowindowContent=document.getElementById(type+"-infowindow-content");
+        autocomplete.bindTo("bounds", map);
+        autocomplete.setFields(["address_components", "geometry", "icon", "name"]);
+        const infowindow = new google.maps.InfoWindow();
+        const infowindowContent = document.getElementById(type + "-infowindow-content");
 
         infowindow.setContent(infowindowContent);
 
-        const marker=new google.maps.Marker({
+        const marker = new google.maps.Marker({
             map,
             anchorPoint: new google.maps.Point(0, -29),
         });
-        autocomplete.addListener("place_changed",()=>{
+        autocomplete.addListener("place_changed", () => {
             infowindow.close();
             marker.setVisible(false);
-            const place=autocomplete.getPlace();
-            if(!place.geometry){
-                window.alert("Autocomplete's returned place contains no geometry: '"+place.name+"'");
+            const place = autocomplete.getPlace();
+            if (!place.geometry) {
+                window.alert("Autocomplete's returned place contains no geometry: '" + place.name + "'");
                 return;
             }
 
-            if(place.geometry.viewport){
+            if (place.geometry.viewport) {
                 map.fitBounds(place.geometry.viewport);
-            }else{
+            } else {
                 map.setCenter(place.geometry.location);
                 map.setZoom(17);
             }
 
             marker.setPosition(place.geometry.location);
             marker.setVisible(true);
-            let address="";
-            if (place.address_components){
-                address=[
+            let address = "";
+            if (place.address_components) {
+                address = [
                     (place.address_components[0] && place.address_components[0].short_name || ""),
                     (place.address_components[1] && place.address_components[1].short_name || ""),
                     (place.address_components[2] && place.address_components[2].short_name || ""),
-            ].join(" ");
+                ].join(" ");
             }
 
-            infowindowContent.children[type+"-place-icon"].src=place.icon;
-            infowindowContent.children[type+"-place-name"].textContent=place.name;
-            infowindowContent.children[type+"-place-address"].textContent=address;
-            infowindow.open(map,marker);
+            infowindowContent.children[type + "-place-icon"].src = place.icon;
+            infowindowContent.children[type + "-place-name"].textContent = place.name;
+            infowindowContent.children[type + "-place-address"].textContent = address;
+            infowindow.open(map, marker);
 
-            $("#"+type+"_lat").val(place.geometry.location.lat());
-            $("#"+type+"_lng").val(place.geometry.location.lng());
+            $("#" + type + "_lat").val(place.geometry.location.lat());
+            $("#" + type + "_lng").val(place.geometry.location.lng());
         });
 
     }
 
-    function initMap(){
-        initMapByType('pickup',pickupLat,pickupLng)
-        initMapByType('delivery',deliveryLat,deliveryLng)
+    function initMap() {
+        initMapByType('pickup', pickupLat, pickupLng)
+        initMapByType('delivery', deliveryLat, deliveryLng)
     }
 
 </script>

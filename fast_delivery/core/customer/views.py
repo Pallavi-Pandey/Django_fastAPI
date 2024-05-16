@@ -12,7 +12,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.conf import settings
-from core.models import Job
+from core.models import Job, Transaction
 
 cred = credentials.Certificate(settings.FIREBASE_ADMIN_CREDETIALS)
 firebase_admin.initialize_app(cred)
@@ -165,6 +165,44 @@ def create_job_page(request):
                    
                 return redirect(reverse('customer:create_job'))
             
+        elif request.POST.get('step')=='4':
+            if creating_job.price:
+                try:
+                    payment_intent=stripe.PaymentIntent.create(
+                        payment_method=current_customer.stripe_payment_method_id,
+                        amount=int(creating_job.price*100),
+                        currency='usd',
+                        customer=current_customer.stripe_customer_id,
+                        description="for shipping",
+                        shipping= {
+                            "name": "Random singh",
+                            "address": {
+                                "line1": "510 Townsend St",
+                                "postal_code": "98140",
+                                "city": "San Francisco",
+                                "state": "CA",
+                                "country": "US",
+                            },
+                            },
+
+                        confirm=True,
+                        off_session=True,
+                    )
+                    Transaction.objects.create(
+                        stripe_payment_intent_id=payment_intent['id'],
+                        job=creating_job,
+                        amount=creating_job.price
+                    )
+                    creating_job.status=Job.PROCESSING_STATUS
+                    creating_job.save()
+                    return redirect(reverse('customer:home'))
+                
+                except stripe.error.CardError as e:
+                    err=e.error
+                    print("Code is {}".format(err.code))
+                    payment_intent_id=err.payment_intent['id']
+                    payment_intent=stripe.PaymentIntent.retrieve(payment_intent_id)
+
     # determine the current step
     if not creating_job:
         current_step=1

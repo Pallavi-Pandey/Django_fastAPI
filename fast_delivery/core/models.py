@@ -81,4 +81,13 @@ class Job(models.Model):
     price=models.FloatField(default=0)
 
     def __str__(self):
-        return self.name
+        return self.description
+    
+class Transaction(models.Model):
+    stripe_payment_intent_id = models.CharField(max_length=225, unique=True)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    amount = models.FloatField(default=0)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.stripe_payment_intent_id
