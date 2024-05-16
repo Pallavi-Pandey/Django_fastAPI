@@ -80,6 +80,13 @@ class Job(models.Model):
     distance=models.FloatField(default=0)
     price=models.FloatField(default=0)
 
+    # Extra Info
+    pickup_photo=models.ImageField(upload_to='job/pickup_photos/',blank=True,null=True)
+    pickedup_at=models.DateTimeField(blank=True,null=True)
+
+    delivery_photo=models.ImageField(upload_to='job/delivery_photos/',blank=True,null=True)
+    delivered_at=models.DateTimeField(blank=True,null=True)
+
     def __str__(self):
         return self.description
     
