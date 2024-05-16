@@ -19,7 +19,7 @@
         color: orange;
     }
 
-    #pickup-map {
+    #pickup-map, #delivery-map{
         height: 100%;
     }
 </style>
@@ -55,7 +55,7 @@
                     <h4>{{job.pickup_name}}</h4>
                     <span>{{job.pickup_address}} item</span><br>
                     {% endif %}
-                    
+
                     {% endif %}
                 </div>
             </div>
@@ -140,10 +140,10 @@
                                     </div>
                                     <div class="col-lg-4">
                                         <div id="pickup-map"></div>
-                                        <div id="infowindow-content">
+                                        <div id="pickup-infowindow-content">
                                             <img src="" width="16" height="16" id="place-icon">
-                                            <span id="place-name" class="title"></span><br>
-                                            <span id="place-address"></span>
+                                            <span id="pickup-place-name" class="title"></span><br>
+                                            <span id="pickup-place-address"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -160,6 +160,40 @@
                 <div class="tab-pane fade  {% if step == 3 %}show active {% endif %}" id="pills-delivery"
                     role="tabpanel" aria-labelledby="pills-delivery-tab">
                     <h1>Delivery</h1>
+                    <form method="POST" enctype="multipart/form-data">
+                        <b class="text-secondary">
+                            Delivery Information
+                        </b><br/>
+                        <div class="card bg-white mt-2 mb-5">
+                            <div class="card-body">
+                                <div class="row">
+    
+                                    <div class="col-lg-8">
+                                        {% csrf_token %}
+                                        {% bootstrap_form step3_form  exclude="delivery_lat,delivery_lng" %}
+                                        <input hidden name="delivery_lat" id="delivery_lat"
+                                        value="{{job.delivery_lat}}"
+                                        >
+                                        <input hidden name="delivery_lng" id="delivery_lng"
+                                        value="{{job.delivery_lng}}"
+                                        >
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div id="delivery-map"></div>
+                                        <div id="delivery-infowindow-content">
+                                            <img src="" width="16" height="16" id="place-icon">
+                                            <span id="place-name"  class="title"></span><br>
+                                            <span id="place-address"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="step" value="3">
+                        <button type="button" class="btn btn-warning" onclick="$('#pills-info-tab').tab('show');">Back</button> 
+                        <button type="submit" class="btn btn-warning ">Save & Continue</button>
+    
+                    </form>
                 </div>
                 <!-- STEP 4 -->
                 <div class="tab-pane fade  {% if step == 4 %}show active {% endif %}" id="pills-payment" role="tabpanel"
@@ -175,23 +209,26 @@
     var pickupLat=parseFloat('{{job.pickup_lat}}');
     var pickupLng=parseFloat('{{job.pickup_lng}}');
 
-    function initMap(){
-        const map=new google.maps.Map(document.getElementById("pickup-map"),{
-            center:{lat:pickupLat||-33.8688,lng:pickupLng ||151.2195},zoom:13,
+    var deliveryLat=parseFloat('{{job.delivery_lat}}');
+    var deliveryLng=parseFloat('{{job.delivery_lng}}');
+
+    function initMapByType(type,intiLat,initLng){
+        const map=new google.maps.Map(document.getElementById(type+"-map"),{
+            center:{lat:intiLat||-33.8688,lng:initLng ||151.2195},zoom:13,
         });
-        if (pickupLat && pickupLng){
+        if (intiLat && initLng){
             new google.maps.Marker({
-                position:new google.maps.LatLng(pickupLat,pickupLng),
+                position:new google.maps.LatLng(intiLat,initLng),
                 map:map,
             })
         }
-    const input=document.getElementById("id_pickup_address");
-    const autocomplete=new google.maps.places.Autocomplete(input);
+        const input=document.getElementById("id_"+ type +"_address");
+        const autocomplete=new google.maps.places.Autocomplete(input);
 
         autocomplete.bindTo("bounds",map);
         autocomplete.setFields(["address_components","geometry","icon","name"]);
         const infowindow=new google.maps.InfoWindow();
-        const infowindowContent=document.getElementById("infowindow-content");
+        const infowindowContent=document.getElementById(type+"-infowindow-content");
 
         infowindow.setContent(infowindowContent);
 
@@ -226,15 +263,20 @@
             ].join(" ");
             }
 
-            infowindowContent.children["place-icon"].src=place.icon;
-            infowindowContent.children["place-name"].textContent=place.name;
-            infowindowContent.children["place-address"].textContent=address;
+            infowindowContent.children[type+"-place-icon"].src=place.icon;
+            infowindowContent.children[type+"-place-name"].textContent=place.name;
+            infowindowContent.children[type+"-place-address"].textContent=address;
             infowindow.open(map,marker);
 
-            $("#pickup_lat").val(place.geometry.location.lat());
-            $("#pickup_lng").val(place.geometry.location.lng());
+            $("#"+type+"_lat").val(place.geometry.location.lat());
+            $("#"+type+"_lng").val(place.geometry.location.lng());
         });
 
+    }
+
+    function initMap(){
+        initMapByType('pickup',pickupLat,pickupLng)
+        initMapByType('delivery',deliveryLat,deliveryLng)
     }
 
 </script>
