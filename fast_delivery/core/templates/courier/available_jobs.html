@@ -45,6 +45,22 @@
                 }
             });
     }
+
+    function showJobDetail(job) {
+        $("#job-detail").css("display", "block");
+        $("#job-name").html(job.name);
+
+        $("#job-photo").attr("src", "/media/" + job.photo);
+        $("#pickup-address").html(job.pickup_address);
+        $("#delivery-address").html(job.delivery_address);
+        $("#duration").html(job.duration);
+        $("#distance").html(job.distance);
+        $("#price").html(job.price);
+
+        $("#job-details").on("click", function(){
+            window.location.href = "/courier/job/available/" + job.id + "/";
+        });
+    }
 </script>
 
 <style>
