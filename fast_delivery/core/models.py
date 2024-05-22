@@ -101,9 +101,16 @@ class Job(models.Model):
         return self.description
     
 class Transaction(models.Model):
+    IN_STATUS ="in"
+    OUT_STATUS ="out"
+    STATUS = [
+        (IN_STATUS,"In"),
+        (OUT_STATUS,"Out"),
+    ]
     stripe_payment_intent_id = models.CharField(max_length=225, unique=True)
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
     amount = models.FloatField(default=0)
+    status = models.CharField(max_length=20, choices=STATUS, default=IN_STATUS)
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
