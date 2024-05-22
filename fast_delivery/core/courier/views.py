@@ -2,8 +2,10 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.conf import settings
+from django.contrib import messages
 
 from core.models import *
+from core.courier import forms
 
 @login_required(login_url='/sign-in/?next=/courier/')
 def home(request):
@@ -97,3 +99,20 @@ def profile_page(request):
         "total_km": total_km
     })
 
+@login_required(login_url='/sign-in/?next=/courier/')
+def payout_method_page(request):
+    payout_form = forms.PayoutForm(instance=request.user.courier)
+
+    if request.method == 'POST':
+        payout_form = forms.PayoutForm(request.POST, instance=request.user.courier)
+        if payout_form.is_valid():
+            payout_form.save()
+
+            messages.success(request, 'Payout method updated successfully')
+            return redirect(reverse('courier:profile'))
+
+    return render(request, 'courier/payout_method.html',{
+        'payout_form': payout_form,
+    })
+
+    
