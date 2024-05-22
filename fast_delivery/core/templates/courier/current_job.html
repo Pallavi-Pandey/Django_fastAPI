@@ -81,7 +81,7 @@
             .catch((e) => window.alert("Directions request failed due to " + status));
     }
 
-    function updateCourirePosition(map) {
+    function updateCourierPosition(map) {
         navigator.geolocation.watchPosition((position) => {
             var courierPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             if (!window.courierMarker) {
@@ -166,6 +166,10 @@
                     </div>
                 </div>
             </div>
+            
+            <a href="{% url 'courier:current_job_take_photo' job.id %}" class="btn btn-block btn-warning btn-md mt-2">
+                Pickup
+            </a>
         </div>
     </div>
     {% else %}
