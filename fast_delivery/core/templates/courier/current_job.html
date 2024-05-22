@@ -168,8 +168,8 @@
             </div>
             
             <a href="{% url 'courier:current_job_take_photo' job.id %}" class="btn btn-block btn-warning btn-md mt-2">
-                Pickup
-            </a>
+                {% if job.status == 'picking' %} Pickup {% else %} Drop Off {% endif %}
+             </a>
         </div>
     </div>
     {% else %}
