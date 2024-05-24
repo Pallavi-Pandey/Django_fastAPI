@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-qou4y)4651&%bh(t8g(7s&5in+m&dtb%n5y_g&hp_!j7b#v!#)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*',]
 
 
 # Application definition
@@ -161,3 +161,5 @@ STRIPE_API_PUBLIC_KEY = "pk_test_51PGRhxSDpQz4Qfa6IB51KI4hiXxFh12BwPNiIKk19PiKjG
 STRIPE_API_SECRET_KEY = stripe_private_key
 
 GOOGLE_API_KEY = google_api_key
+
+NOTIFICATION_URL = "https://24b6-2401-4900-235f-24e2-7098-3095-35cb-7e51.ngrok-free.app"
