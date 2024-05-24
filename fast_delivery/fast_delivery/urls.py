@@ -4,6 +4,7 @@ from core import views
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 
 from core.customer import views as customer_views
 from core.courier import views as courier_views, apis as courier_apis
@@ -32,6 +33,7 @@ courier_urlpatterns = [
 
     path('api/jobs/available/', courier_apis.available_jobs_api, name="available_jobs_api"),
     path('api/jobs/current/<id>/update',courier_apis.current_job_update_api,name="current_job_update_api"),
+    path('api/fcm_token/update/', courier_apis.fcm_token_update_api, name="fcm_token_update_api"),
 ]
 
 urlpatterns = [
@@ -45,6 +47,8 @@ urlpatterns = [
 
     path('customer/', include((customer_urlpatterns, 'customer'))),
     path('courier/', include((courier_urlpatterns, 'courier'))),
+    path('firebase-messaging-sw.js', (TemplateView.as_view(template_name="firebase-messaging-sw.js", content_type="application/javascript",))),
+
 ]
 
 if settings.DEBUG:
