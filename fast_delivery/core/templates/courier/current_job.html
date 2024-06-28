@@ -82,27 +82,42 @@
     }
 
     function updateCourierPosition(map) {
-        navigator.geolocation.watchPosition((position) => {
-            var courierPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            if (!window.courierMarker) {
-                window.courierMarker = new google.maps.Marker({
-                    position: courierPosition,
-                    map,
-                    icon: {
-                        url: "{% static 'img/courier.png' %}", // Make sure this path is correct and the image is accessible
-                        scaledSize: new google.maps.Size(50, 50), // Change to your desired size
-                        size: new google.maps.Size(50, 50), // Optional, specifies the size of the image
-                        origin: new google.maps.Point(0, 0), // Optional, the origin of the image (0, 0 is top left)
-                        anchor: new google.maps.Point(25, 60) // Optional, the anchor point of the image, usually set to half the size
-                    },
-                })
-            }
-            else {
-                window.courierMarker.setPosition(courierPosition);
-            }
-            map.panTo(courierPosition);
-        },
-            pos => console.log(pos)
+        const jobSocket = new WebSocket(
+            "ws://" + window.location.host + "/ws/jobs/{{ job.id }}/"
+        );
+        navigator.geolocation.watchPosition(
+            position => {
+                var courierPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                if (!window.courierMarker) {
+                    window.courierMarker = new google.maps.Marker({
+                        position: courierPosition,
+                        map,
+                        icon: {
+                            url: "{% static 'img/courier.png' %}", // Make sure this path is correct and the image is accessible
+                            scaledSize: new google.maps.Size(50, 50), // Change to your desired size
+                            size: new google.maps.Size(50, 50), // Optional, specifies the size of the image
+                            origin: new google.maps.Point(0, 0), // Optional, the origin of the image (0, 0 is top left)
+                            anchor: new google.maps.Point(25, 60) // Optional, the anchor point of the image, usually set to half the size
+                        },
+                    })
+                }
+                else {
+                    window.courierMarker.setPosition(courierPosition);
+                }
+                map.panTo(courierPosition);
+
+                try {
+                    jobSocket.send(JSON.stringify({
+                        job: {
+                            courier_lat: position.coords.latitude,
+                            courier_lng: position.coords.longitude,
+                        }
+                    }));
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+            position => console.log(position),
         );
     }
 
@@ -166,10 +181,10 @@
                     </div>
                 </div>
             </div>
-            
+
             <a href="{% url 'courier:current_job_take_photo' job.id %}" class="btn btn-block btn-warning btn-md mt-2">
                 {% if job.status == 'picking' %} Pickup {% else %} Drop Off {% endif %}
-             </a>
+            </a>
         </div>
     </div>
     {% else %}

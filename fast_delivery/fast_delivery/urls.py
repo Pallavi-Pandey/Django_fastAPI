@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from core import views
+from core import views, consumers
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -36,6 +36,12 @@ courier_urlpatterns = [
     path('api/fcm_token/update/', courier_apis.fcm_token_update_api, name="fcm_token_update_api"),
 ]
 
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+class CustomLoginView(auth_views.LoginView):
+    template_name = 'signin.html'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('social_django.urls', namespace='social')),
@@ -49,6 +55,10 @@ urlpatterns = [
     path('courier/', include((courier_urlpatterns, 'courier'))),
     path('firebase-messaging-sw.js', (TemplateView.as_view(template_name="firebase-messaging-sw.js", content_type="application/javascript",))),
 
+]
+
+websockets_urlpatterns = [
+    path('ws/jobs/<job_id>/', consumers.JobConsumer.as_asgi()),
 ]
 
 if settings.DEBUG:

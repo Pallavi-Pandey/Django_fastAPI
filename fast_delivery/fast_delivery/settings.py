@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*',]
 
+CSRF_TRUSTED_ORIGINS = ['https://fbf7-2401-4900-235e-2ff5-8f4e-fd81-ddc6-b9d.ngrok-free.app/',]
 
 # Application definition
 
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'social_django',
     'core.apps.CoreConfig',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -162,4 +164,6 @@ STRIPE_API_SECRET_KEY = stripe_private_key
 
 GOOGLE_API_KEY = google_api_key
 
-NOTIFICATION_URL = "https://24b6-2401-4900-235f-24e2-7098-3095-35cb-7e51.ngrok-free.app"
+NOTIFICATION_URL = "https://fbf7-2401-4900-235e-2ff5-8f4e-fd81-ddc6-b9d.ngrok-free.app/"
+
+ASGI_APPLICATION = "fast_delivery.asgi.application"
