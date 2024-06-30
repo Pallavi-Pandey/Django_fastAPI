@@ -6,4 +6,3 @@ social-auth-app-django
 firebase-admin
 stripe
 requests
-channels
